@@ -37,22 +37,24 @@ const val METHOD_EVENT_NAME = "billion.group.wireguard_flutter/wgstage"
 
 class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     PluginRegistry.ActivityResultListener {
-    private lateinit var channel: MethodChannel
-    private lateinit var events: EventChannel
+
     private lateinit var tunnelName: String
     private val futureBackend = CompletableDeferred<Backend>()
     private var vpnStageSink: EventChannel.EventSink? = null
     private val scope = CoroutineScope(Job() + Dispatchers.Main.immediate)
-    private var backend: Backend? = null
     private var havePermission = false
     private lateinit var context: Context
     private var activity: Activity? = null
     private var config: com.wireguard.config.Config? = null
-    private var tunnel: WireGuardTunnel? = null
     private val TAG = "NVPN"
     var isVpnChecked = false
     companion object {
         private var state: String = "no_connection"
+        private var tunnel: WireGuardTunnel? = null
+        private var backend: Backend? = null
+        private lateinit var channel: MethodChannel
+        private lateinit var events: EventChannel
+
 
         fun getStatus(): String {
             return state
@@ -163,12 +165,12 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 checkPermission()
                 result.success(null)
             }
-            "getDownloadData" -> {
-                getDownloadData(result)
-            }
-            "getUploadData" -> {
-                getUploadData(result)
-            }
+            // "getDownloadData" -> {
+            //     getDownloadData(result)
+            // }
+            // "getUploadData" -> {
+            //     getUploadData(result)
+            // }
             else -> flutterNotImplemented(result)
         }
     }
@@ -290,29 +292,29 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
-    private fun getDownloadData(result: Result) {
-        scope.launch(Dispatchers.IO) {
-            try {
-                val downloadData = futureBackend.await().getTransferData(tunnel(tunnelName)).rxBytes
-                flutterSuccess(result, downloadData)
-            } catch (e: Throwable) {
-                Log.e(TAG, "getDownloadData - ERROR - ${e.message}")
-                flutterError(result, e.message.toString())
-            }
-        }
-    }
+    // private fun getDownloadData(result: Result) {
+    //     scope.launch(Dispatchers.IO) {
+    //         try {
+    //             val downloadData = futureBackend.await().getTransferData(tunnel(tunnelName)).rxBytes
+    //             flutterSuccess(result, downloadData)
+    //         } catch (e: Throwable) {
+    //             Log.e(TAG, "getDownloadData - ERROR - ${e.message}")
+    //             flutterError(result, e.message.toString())
+    //         }
+    //     }
+    // }
 
-    private fun getUploadData(result: Result) {
-        scope.launch(Dispatchers.IO) {
-            try {
-                val uploadData = futureBackend.await().getTransferData(tunnel(tunnelName)).txBytes
-                flutterSuccess(result, uploadData)
-            } catch (e: Throwable) {
-                Log.e(TAG, "getUploadData - ERROR - ${e.message}")
-                flutterError(result, e.message.toString())
-            }
-        }
-    }
+    // private fun getUploadData(result: Result) {
+    //     scope.launch(Dispatchers.IO) {
+    //         try {
+    //             val uploadData = futureBackend.await().getTransferData(tunnel(tunnelName)).txBytes
+    //             flutterSuccess(result, uploadData)
+    //         } catch (e: Throwable) {
+    //             Log.e(TAG, "getUploadData - ERROR - ${e.message}")
+    //             flutterError(result, e.message.toString())
+    //         }
+    //     }
+    // }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
