@@ -40,7 +40,6 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
     private lateinit var tunnelName: String
     private val futureBackend = CompletableDeferred<Backend>()
-    private var vpnStageSink: EventChannel.EventSink? = null
     private val scope = CoroutineScope(Job() + Dispatchers.Main.immediate)
     private var havePermission = false
     private lateinit var context: Context
@@ -54,6 +53,7 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         private var backend: Backend? = null
         private lateinit var channel: MethodChannel
         private lateinit var events: EventChannel
+        private var vpnStageSink: EventChannel.EventSink? = null
 
 
         fun getStatus(): String {
