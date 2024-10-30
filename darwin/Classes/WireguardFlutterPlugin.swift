@@ -58,13 +58,20 @@ public class WireguardFlutterPlugin: NSObject, FlutterPlugin {
                 let wgQuickConfig: String? = (call.arguments as? [String: Any])?["wgQuickConfig"] as? String
                 let providerBundleIdentifier: String? = (call.arguments as? [String: Any])?["providerBundleIdentifier"] as? String
                 self.connect(serverAddress: serverAddress!, wgQuickConfig: wgQuickConfig!, providerBundleIdentifier: providerBundleIdentifier!, result: result)
-            
+            case "getStats":
+                self.getStats(result: result)          
             case "dispose":
                 self.initialized = false
             default:
                 break
             }
         })
+    }
+
+    private func getStats(result: @escaping FlutterResult) {
+        WireguardFlutterPlugin.utils.getStats() { success in
+            result(success)
+        }
     }
     
     private func connect(serverAddress: String, wgQuickConfig: String, providerBundleIdentifier: String, result: @escaping FlutterResult) {
@@ -248,6 +255,39 @@ class VPNUtils {
             }
         }
     }
+
+    func getStats(completion: @escaping (String?) -> Void) {
+                NSLog("getting transfer data")
+        NETunnelProviderManager.loadAllFromPreferences { managers, error in
+            guard let manager = managers?.first else {
+                NSLog("no manager") 
+                completion(nil)
+                return
+            }
+            
+            guard let session = manager.connection as? NETunnelProviderSession else {
+                NSLog("no session") 
+                completion(nil)
+                return
+            }
+            
+            do {
+                try session.sendProviderMessage("getStats".data(using: .utf8)!) { response in
+                    guard let responseString = String(data: response ?? "".data(using: .utf8)!, encoding: .utf8) else {
+                        NSLog("Response is nil or not UTF-8 encoded")
+                        completion(nil)
+                        return
+                    }
+
+                    completion(responseString)
+                }
+            } catch {
+                NSLog("Error (sendProviderMessage): \(error)")
+                completion(nil)
+                return
+            }
+        }
+    }
     
     func stopVPN(completion: @escaping (Bool?) -> Void) {
         NETunnelProviderManager.loadAllFromPreferences { tunnelManagersInSettings, error in
@@ -292,6 +332,13 @@ class VPNUtils {
             do {
                 try session.sendProviderMessage("getTransferData".data(using: .utf8)!) { response in
                     guard let response = response, response.count == 16 else {
+                        guard let responseString = String(data: response ?? "".data(using: .utf8)!, encoding: .utf8) else {
+                            NSLog("Response is nil or not UTF-8 encoded")
+                            completion(nil, nil)
+                            return
+                        }
+
+                        NSLog("Response as UTF-8 string: \(responseString)")
                         completion(nil, nil)
                         return
                     }
