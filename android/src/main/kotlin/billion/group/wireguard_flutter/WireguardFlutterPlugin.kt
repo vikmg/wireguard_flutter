@@ -39,7 +39,6 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     PluginRegistry.ActivityResultListener {
 
     private lateinit var tunnelName: String
-    private val futureBackend = CompletableDeferred<Backend>()
     private val scope = CoroutineScope(Job() + Dispatchers.Main.immediate)
     private var havePermission = false
     private lateinit var context: Context
@@ -48,6 +47,7 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     private val TAG = "NVPN"
     var isVpnChecked = false
     companion object {
+        private val futureBackend = CompletableDeferred<Backend>()
         private var state: String = "no_connection"
         private var tunnel: WireGuardTunnel? = null
         private var backend: Backend? = null
