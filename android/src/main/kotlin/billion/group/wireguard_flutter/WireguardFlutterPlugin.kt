@@ -309,7 +309,6 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         scope.launch(Dispatchers.IO) {
             try {
-                println("awaiting stats")
                 val stats = futureBackend.await().getStatistics(tunnel(tunnelName))
 
                 var latestHandshake = 0L
@@ -320,7 +319,6 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                         latestHandshake = peerStats.latestHandshakeEpochMillis
                     }
                 }
-                println("got peer stats")
                 flutterSuccess(result, Klaxon().toJsonString(
                     Stats(stats.totalRx(), stats.totalTx(), latestHandshake)
                 ))

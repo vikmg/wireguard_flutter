@@ -257,7 +257,6 @@ class VPNUtils {
     }
 
     func getStats(completion: @escaping (String?) -> Void) {
-                NSLog("getting transfer data")
         NETunnelProviderManager.loadAllFromPreferences { managers, error in
             guard let manager = managers?.first else {
                 NSLog("no manager") 
