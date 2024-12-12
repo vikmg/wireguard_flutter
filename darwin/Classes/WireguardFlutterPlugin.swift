@@ -139,7 +139,7 @@ public class WireguardFlutterPlugin: NSObject, FlutterPlugin {
 }
 
 @available(iOS 15.0, *)
-class VPNUtils {
+public class VPNUtils {
     var providerManager: NETunnelProviderManager!
     var providerBundleIdentifier: String?
     var localizedDescription: String?
@@ -199,7 +199,7 @@ class VPNUtils {
         }
     }
     
-    func currentStatus() -> String? {
+    public func currentStatus() -> String? {
         if self.providerManager != nil {
             return onVpnStatusChangedString(notification: self.providerManager.connection.status)
         } else {
