@@ -147,7 +147,7 @@ public class VPNUtils {
     var serverAddress: String?
     var stage: FlutterEventSink!
     
-    func loadProviderManager(completion: @escaping (_ error: Error?) -> Void) {
+    public func loadProviderManager(completion: @escaping (_ error: Error?) -> Void) {
         NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
             if error == nil {
                 self.providerManager = managers?.first ?? NETunnelProviderManager()
