@@ -54,6 +54,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.2"
     implementation 'com.beust:klaxon:5.5'
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation "androidx.annotation:annotation:1.5.0"
 
     /// to run wireguard on Android 25 or lower
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"

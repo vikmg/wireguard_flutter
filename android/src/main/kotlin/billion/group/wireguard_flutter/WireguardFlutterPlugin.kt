@@ -25,6 +25,7 @@ import io.flutter.plugin.common.EventChannel
 import kotlinx.coroutines.*
 import java.util.*
 
+import androidx.annotation.Keep
 
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
@@ -35,6 +36,7 @@ const val PERMISSIONS_REQUEST_CODE = 10014
 const val METHOD_CHANNEL_NAME = "billion.group.wireguard_flutter/wgcontrol"
 const val METHOD_EVENT_NAME = "billion.group.wireguard_flutter/wgstage"
 
+@Keep
 class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     PluginRegistry.ActivityResultListener {
 
@@ -300,6 +302,7 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
         }
     }
 
+    @Keep
     private fun handleGetStats(result: MethodChannel.Result) {
 
         if (tunnelName.isEmpty()) {
