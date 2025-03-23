@@ -139,6 +139,7 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
     }
 
     override fun onMethodCall(call: MethodCall, result: Result) {
+        Log.e("on method call!")
 
         when (call.method) {
             "initialize" -> setupTunnel(call.argument<String>("localizedDescription") ?: "", result)
@@ -168,10 +169,13 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 result.success(null)
             }
             "getStats" -> {
+                Log.e("get stats!")
                 if (tunnelName.isEmpty()) {
+                    Log.e("tunnel si empty")
                     println("tunnel name is empty when trying to get stats")
                     flutterError(result, "Invalid argument type for tunnel name")
                 } else {
+                    Log.e("handling stats")
                     handleGetStats(result)
                 }
             }
@@ -312,6 +316,7 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
 
         scope.launch(Dispatchers.IO) {
             try {
+                Log.e("gettign stats")
                 val stats = futureBackend.await().getStatistics(tunnel(tunnelName))
 
                 var latestHandshake = 0L
@@ -322,6 +327,7 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                         latestHandshake = peerStats.latestHandshakeEpochMillis
                     }
                 }
+                Log.e("flutter success?")
                 flutterSuccess(result, Klaxon().toJsonString(
                     Stats(stats.totalRx(), stats.totalTx(), latestHandshake)
                 ))
