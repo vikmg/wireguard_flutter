@@ -321,7 +321,7 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                     }
                 }
                 flutterSuccess(result, Klaxon().toJsonString(
-                    Stats(stats.totalRx(), stats.totalTx(), latestHandshake)
+                    Stats(stats.totalRx(), stats.totalTx(), latestHandshake,stats.rxBytes,stats.txBytes)
                 ))
             } catch (e: BackendException) {
                 Log.e(TAG, "handleGetStats - BackendException - ERROR - ${e.reason}")
@@ -387,5 +387,7 @@ class WireGuardTunnel(
 class Stats(
     val totalDownload: Long,
     val totalUpload: Long,
-    val lastHandshake: Long
+    val lastHandshake: Long,
+    val rxBytes: Long,
+    val txBytes: Long
 )
