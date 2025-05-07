@@ -131,12 +131,16 @@ class WireGuardFlutterLinux extends WireGuardFlutterInterface {
     num totalDownload = 0;
     num totalUpload = 0;
     int lastHandshake = 0;
+    num rxBytes = 0;
+    num txBytes = 0;
 
     for (var line in lines) {
       if (line.contains('transfer:')) {
         var transferData = line.split(': ')[1].split(', ');
         totalDownload += int.tryParse(transferData[0].split(' ')[0].trim()) ?? 0;
         totalUpload += int.tryParse(transferData[1].split(' ')[0].trim()) ?? 0;
+        rxBytes = int.tryParse(transferData[0].split(' ')[0].trim()) ?? 0;
+        txBytes = int.tryParse(transferData[1].split(' ')[0].trim()) ?? 0;
       }
       if (line.contains('latest handshake:')) {
         var handshakeData = line.split(': ')[1].trim();
@@ -152,6 +156,8 @@ class WireGuardFlutterLinux extends WireGuardFlutterInterface {
       totalDownload: totalDownload,
       totalUpload: totalUpload,
       lastHandshake: lastHandshake,
+      rxBytes: rxBytes,
+      txBytes: txBytes,
     );
   }
 }
