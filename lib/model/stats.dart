@@ -7,7 +7,7 @@ class Stats {
 
   /// Constructor of the [Stats] class that receives [totalDownload] where total downloaded data is stored,
   /// [totalUpload] where uploaded data is stored.
-  Stats({required this.totalDownload, required this.totalUpload, required this.lastHandshake, required this.rxBytes, required this.txByte});
+  Stats({required this.totalDownload, required this.totalUpload, required this.lastHandshake, required this.rxBytes, required this.txBytes});
 
   /// Method [toJson] to convert the class to JSON.
   Map<String, dynamic> toJson() => {'totalDownload': totalDownload, 'totalUpload': totalUpload, 'lastHanshake': lastHandshake , 'rxBytes': rxBytes, 'txBytes': txBytes};
