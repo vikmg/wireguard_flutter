@@ -313,15 +313,19 @@ class WireguardFlutterPlugin : FlutterPlugin, MethodCallHandler, ActivityAware,
                 val stats = futureBackend.await().getStatistics(tunnel(tunnelName))
 
                 var latestHandshake = 0L
+                var rxBytes = 0L
+                var txBytes = 0L
 
                 for (key in stats.peers()) {
                     val peerStats = stats.peer(key)
                     if (peerStats != null && peerStats.latestHandshakeEpochMillis > latestHandshake) {
                         latestHandshake = peerStats.latestHandshakeEpochMillis
+                        rxBytes = peerStats.rxBytes
+                        txBytes = peerStats.txBytes
                     }
                 }
                 flutterSuccess(result, Klaxon().toJsonString(
-                    Stats(stats.totalRx(), stats.totalTx(), latestHandshake,stats.rxBytes,stats.txBytes)
+                    Stats(stats.totalRx(), stats.totalTx(), latestHandshake,rxBytes,txBytes)
                 ))
             } catch (e: BackendException) {
                 Log.e(TAG, "handleGetStats - BackendException - ERROR - ${e.reason}")
